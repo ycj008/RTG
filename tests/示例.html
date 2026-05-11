@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RTG 高精度定位管理系统 - 旗舰版</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.min.js"></script>
+    <style>
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .status-fixed { color: #10b981; }
+        .status-float { color: #f59e0b; }
+        .status-single { color: #ef4444; }
+        .bg-grid { background-image: radial-gradient(#334155 1px, transparent 1px); background-size: 20px 20px; }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen font-sans">
+
+    <!-- 顶部导航 -->
+    <nav class="bg-slate-800 border-b border-slate-700 p-4 sticky top-0 z-50 shadow-2xl">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <i data-lucide="crosshair" class="text-blue-500 w-8 h-8"></i>
+                <div>
+                    <span class="text-xl font-bold tracking-tight block">RTG POSITIONING <span class="text-blue-500 text-sm">V2.5</span></span>
+                    <span class="text-[10px] text-slate-400 uppercase tracking-widest">Precision Calibration System</span>
+                </div>
+            </div>
+            <div class="flex space-x-1 bg-slate-900 p-1 rounded-lg">
+                <button onclick="switchTab('dashboard')" class="tab-btn px-4 py-2 rounded-md text-sm transition-all hover:bg-slate-700 active-tab">仪表盘</button>
+                <button onclick="switchTab('config')" class="tab-btn px-4 py-2 rounded-md text-sm transition-all hover:bg-slate-700">静态数据</button>
+                <button onclick="switchTab('mapping')" class="tab-btn px-4 py-2 rounded-md text-sm transition-all hover:bg-slate-700">A车测绘</button>
+                <button onclick="switchTab('calibration')" class="tab-btn px-4 py-2 rounded-md text-sm transition-all hover:bg-slate-700">B车校准</button>
+                <button onclick="switchTab('manual')" class="tab-btn px-4 py-2 rounded-md text-sm transition-all hover:bg-slate-700">系统说明</button>
+            </div>
+            <div class="flex items-center space-x-3">
+                <div class="text-right mr-2">
+                    <div class="text-[10px] text-slate-500 leading-none">GNSS STATUS</div>
+                    <div class="text-green-500 text-xs font-bold">RTK FIXED</div>
+                </div>
+                <div class="w-3 h-3 bg-green-500 rounded-full animate-pulse shadow-[0_0_10px_#10b981]"></div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto p-6">
+        
+        <!-- 1. 仪表盘 Tab -->
+        <div id="dashboard" class="tab-content active space-y-6 animate-in fade-in duration-500">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div class="bg-slate-800 p-5 rounded-xl border border-slate-700 shadow-lg">
+                    <h3 class="text-slate-500 text-xs font-bold mb-2 uppercase">L-Point (WGS84)</h3>
+                    <div class="text-xl font-mono text-blue-400" id="current-lat">31.12345678° N</div>
+                    <div class="text-xl font-mono text-blue-400" id="current-lon">121.45678901° E</div>
+                </div>
+                <div class="bg-slate-800 p-5 rounded-xl border border-slate-700 shadow-lg">
+                    <h3 class="text-slate-500 text-xs font-bold mb-2 uppercase">实时姿态 (Attitude)</h3>
+                    <div class="grid grid-cols-2 gap-x-4 gap-y-1 text-sm">
+                        <div class="flex justify-between"><span>Roll</span> <span class="font-mono text-yellow-500">0.25°</span></div>
+                        <div class="flex justify-between"><span>Pitch</span> <span class="font-mono text-yellow-500">0.12°</span></div>
+                        <div class="flex justify-between"><span>Yaw</span> <span class="font-mono text-yellow-500">180.5°</span></div>
+                        <div class="flex justify-between"><span>Tilt</span> <span class="font-mono text-red-500">0.28°</span></div>
+                    </div>
+                </div>
+                <div class="bg-slate-800 p-5 rounded-xl border border-slate-700 shadow-lg">
+                    <h3 class="text-slate-500 text-xs font-bold mb-2 uppercase">接收机网络</h3>
+                    <div class="space-y-1 text-xs">
+                        <div class="flex justify-between"><span>Recv-1 (L)</span> <span class="text-green-500">固定解</span></div>
+                        <div class="flex justify-between"><span>Recv-2 (R)</span> <span class="text-green-500">固定解</span></div>
+                        <div class="flex justify-between"><span>Recv-3 (T)</span> <span class="text-green-500">固定解</span></div>
+                    </div>
+                </div>
+                <div class="bg-slate-800 p-5 rounded-xl border border-slate-700 shadow-lg">
+                    <h3 class="text-slate-500 text-xs font-bold mb-2 uppercase">本地存储状态</h3>
+                    <div class="flex items-center space-x-2 mt-2">
+                        <i data-lucide="database" class="w-5 h-5 text-blue-500"></i>
+                        <span class="text-sm font-bold">yard_map.json 已同步</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-slate-800 h-80 rounded-xl border border-slate-700 relative overflow-hidden bg-grid shadow-inner flex items-center justify-center">
+                <div class="text-slate-600 flex flex-col items-center">
+                    <i data-lucide="layout" class="w-16 h-16 mb-4 opacity-20"></i>
+                    <p class="text-lg font-medium opacity-40 uppercase tracking-widest">堆场实时动态热图加载中...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. 静态数据 Tab -->
+        <div id="config" class="tab-content space-y-6">
+            <div class="bg-slate-800 p-8 rounded-2xl border border-slate-700 shadow-xl">
+                <div class="flex justify-between items-start mb-8">
+                    <div>
+                        <h2 class="text-2xl font-bold flex items-center"><i data-lucide="settings-2" class="mr-3 text-blue-500"></i> RTG 静态几何建模</h2>
+                        <p class="text-slate-400 mt-1 text-sm">这些参数用于消除传感器安装位置对定位中心的影响。</p>
+                    </div>
+                    <span class="px-3 py-1 bg-blue-900/30 text-blue-400 text-xs rounded-full border border-blue-500/30 font-bold uppercase">B-Identity Mode</span>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- 基本参数 -->
+                    <div class="bg-slate-900 p-5 rounded-xl border border-slate-700 space-y-4">
+                        <h3 class="text-blue-400 text-xs font-bold uppercase tracking-widest border-b border-slate-700 pb-2 mb-4">基本属性</h3>
+                        <div>
+                            <label class="block text-[10px] text-slate-500 mb-1 uppercase">标称高度 H (m)</label>
+                            <input type="number" step="0.001" class="w-full bg-slate-800 border border-slate-700 rounded p-2 text-xl font-mono text-white outline-none focus:border-blue-500" value="30.000">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] text-slate-500 mb-1 uppercase">门腿跨距 W_span (m)</label>
+                            <input type="number" step="0.001" class="w-full bg-slate-800 border border-slate-700 rounded p-2 text-xl font-mono text-white outline-none focus:border-blue-500" value="23.475">
+                        </div>
+                    </div>
+
+                    <!-- 杆臂参数 -->
+                    <div class="md:col-span-2 bg-slate-900 p-5 rounded-xl border border-slate-700">
+                        <h3 class="text-blue-400 text-xs font-bold uppercase tracking-widest border-b border-slate-700 pb-2 mb-4">天线阵列杆臂值 (相对于 L-Point)</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="p-3 bg-slate-800 rounded border border-slate-700">
+                                <label class="text-[10px] text-slate-500 block mb-2 font-bold">ANTENNA 1 (Front-Left)</label>
+                                <div class="flex gap-2">
+                                    <input type="number" placeholder="dx" class="w-full bg-slate-900 p-1 text-center font-mono rounded border border-slate-700" value="12.50">
+                                    <input type="number" placeholder="dy" class="w-full bg-slate-900 p-1 text-center font-mono rounded border border-slate-700" value="-5.20">
+                                    <input type="number" placeholder="dz" class="w-full bg-slate-900 p-1 text-center font-mono rounded border border-slate-700" value="25.40">
+                                </div>
+                            </div>
+                            <div class="p-3 bg-slate-800 rounded border border-slate-700">
+                                <label class="text-[10px] text-slate-500 block mb-2 font-bold">ANTENNA 2 (Front-Right)</label>
+                                <div class="flex gap-2">
+                                    <input type="number" placeholder="dx" class="w-full bg-slate-900 p-1 text-center font-mono rounded border border-slate-700" value="12.50">
+                                    <input type="number" placeholder="dy" class="w-full bg-slate-900 p-1 text-center font-mono rounded border border-slate-700" value="18.27">
+                                    <input type="number" placeholder="dz" class="w-full bg-slate-900 p-1 text-center font-mono rounded border border-slate-700" value="25.40">
+                                </div>
+                            </div>
+                        </div>
+                        <p class="mt-4 text-[10px] text-slate-500 italic">* 请确保所有 6 根天线的 $(dx, dy, dz)$ 向量已录入。系统将据此执行姿态投影补偿。</p>
+                    </div>
+                </div>
+
+                <div class="mt-10 pt-6 border-t border-slate-700 flex justify-end space-x-4">
+                    <button class="px-6 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg text-sm font-bold">导入历史配置</button>
+                    <button onclick="saveConfig()" class="px-8 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg text-sm font-bold shadow-lg shadow-blue-900/40">保存并更新本地 YAML</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. A车测绘 Tab -->
+        <div id="mapping" class="tab-content space-y-6">
+            <div class="flex justify-between items-center mb-4">
+                <div>
+                    <h2 class="text-2xl font-bold">A 车数字底图测绘</h2>
+                    <p class="text-slate-400 text-sm">通过 A 车打点，建立场地“真理坐标”。</p>
+                </div>
+                <div class="flex space-x-3">
+                    <button onclick="syncToCloud()" class="px-4 py-2 bg-blue-600 rounded-lg text-sm font-bold flex items-center hover:bg-blue-500 shadow-lg shadow-blue-900/30">
+                        <i data-lucide="server" class="w-4 h-4 mr-2"></i> 同步至云端服务器
+                    </button>
+                    <button class="px-4 py-2 bg-slate-700 rounded-lg text-sm font-bold flex items-center hover:bg-slate-600">
+                        <i data-lucide="file-json" class="w-4 h-4 mr-2"></i> 导出 yard_map.json
+                    </button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                <!-- 测绘面板 -->
+                <div class="lg:col-span-1 space-y-6">
+                    <div class="bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-lg">
+                        <label class="block text-[10px] text-slate-500 mb-2 uppercase font-bold tracking-widest">当前贝位 ID</label>
+                        <input type="text" id="bay-id" value="Bay_01" class="w-full bg-slate-900 border border-slate-600 rounded-lg p-4 text-3xl font-mono text-blue-400 outline-none">
+                        
+                        <div class="mt-6 space-y-4">
+                            <div class="flex justify-between items-center p-3 bg-slate-900 rounded-lg border border-slate-700">
+                                <span class="text-xs text-slate-400">解算质量</span>
+                                <span class="text-green-500 font-bold text-sm">RTK FIXED</span>
+                            </div>
+                            <button onclick="recordPoint()" class="w-full py-4 bg-green-600 hover:bg-green-500 rounded-xl font-bold text-lg shadow-xl shadow-green-900/30 transition-all active:scale-95 flex items-center justify-center">
+                                <i data-lucide="map-pin" class="mr-2"></i> 采集并记录位置
+                            </button>
+                            <p class="text-[10px] text-center text-slate-500">点击后将采样 5s 平均值，并同步写入本地 SQLite。</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-blue-900/10 p-4 rounded-xl border border-blue-500/20">
+                        <h4 class="text-blue-400 text-xs font-bold uppercase mb-2">作业提示</h4>
+                        <p class="text-xs text-blue-200/60 leading-relaxed">请确保车辆左门腿中心线与地面贝位线完全对齐后再触发采集。系统会自动计算该点的地形高度残差并作为补丁存储。</p>
+                    </div>
+                </div>
+
+                <!-- 数据列表 -->
+                <div class="lg:col-span-3 bg-slate-800 rounded-xl border border-slate-700 overflow-hidden shadow-lg">
+                    <table class="w-full text-left text-sm">
+                        <thead class="bg-slate-700/50 text-slate-400 text-[10px] uppercase font-bold">
+                            <tr>
+                                <th class="p-4">贝位编号</th>
+                                <th class="p-4">WGS84 坐标 (Lat/Lon)</th>
+                                <th class="p-4">高度补偿 (dz)</th>
+                                <th class="p-4">存储状态</th>
+                            </tr>
+                        </thead>
+                        <tbody id="map-table-body" class="divide-y divide-slate-700/50">
+                            <tr>
+                                <td class="p-4 font-mono font-bold">Bay_01</td>
+                                <td class="p-4 font-mono text-slate-300">31.1234567, 121.4567891</td>
+                                <td class="p-4 text-blue-400">+0.012m</td>
+                                <td class="p-4"><span class="px-2 py-1 bg-green-900/30 text-green-500 text-[10px] rounded border border-green-500/30 font-bold uppercase">LOCAL + SERVER</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. 系统说明 Tab -->
+        <div id="manual" class="tab-content space-y-6">
+            <div class="bg-slate-800 p-8 rounded-2xl border border-slate-700 shadow-xl prose prose-invert max-w-none">
+                <h1 class="text-blue-500 border-b border-slate-700 pb-4">RTG 系统作业逻辑概览</h1>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12 not-prose">
+                    <div>
+                        <h3 class="text-white text-lg font-bold mb-4 flex items-center"><i data-lucide="hard-drive" class="mr-2 text-blue-500"></i> 数据流与存储策略</h3>
+                        <ul class="space-y-4 text-sm text-slate-400">
+                            <li class="flex items-start">
+                                <span class="bg-blue-600 text-white w-5 h-5 rounded-full flex items-center justify-center text-[10px] mr-3 mt-0.5 shrink-0">1</span>
+                                <span><strong>本地优先存储</strong>：A 车测绘的点位会实时写入本地 SQLite。如果车辆下次进入场地时服务器离线，系统将自动加载最后一份本地底图。</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="bg-blue-600 text-white w-5 h-5 rounded-full flex items-center justify-center text-[10px] mr-3 mt-0.5 shrink-0">2</span>
+                                <span><strong>云端同步备份</strong>：在 Mapping 界面点击“同步”，底图会上传至中心服务器。新车辆（B车）入场时通过内网自动同步该底图。</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="bg-blue-600 text-white w-5 h-5 rounded-full flex items-center justify-center text-[10px] mr-3 mt-0.5 shrink-0">3</span>
+                                <span><strong>校准参数持久化</strong>：B 车在前 3 点算出的变换矩阵 $M$ 会永久保存在本地 `config.yaml` 中，直至下次重新标定。</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="text-white text-lg font-bold mb-4 flex items-center"><i data-lucide="cpu" class="mr-2 text-blue-500"></i> Ubuntu 核心运行逻辑</h3>
+                        <div class="bg-slate-900 p-5 rounded-xl border border-slate-700 font-mono text-[11px] leading-relaxed">
+                            <span class="text-blue-400">// 系统主循环 (10Hz)</span><br>
+                            1. 读取 6 根天线 NMEA 数据 + IMU 数据<br>
+                            2. 姿态解算 (Heading, Roll, Pitch)<br>
+                            3. <span class="text-yellow-500">倾斜补偿:</span> P_ground = f(P_ant, H, Roll, Pitch)<br>
+                            4. <span class="text-yellow-500">矩阵转换:</span> P_final = Matrix_B * P_ground<br>
+                            5. <span class="text-yellow-500">地形微调:</span> 基于 A 车底图残差修正 Z<br>
+                            6. 向 PLC 发送最终坐标报文
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. B车校准 Tab (原有向导保留并优化) -->
+        <div id="calibration" class="tab-content">
+            <!-- (保持原有校准逻辑界面，可根据需要增加更多引导步骤) -->
+             <div class="bg-slate-800 p-12 rounded-2xl border border-slate-700 max-w-2xl mx-auto text-center shadow-2xl">
+                <div class="w-20 h-20 bg-yellow-500/10 rounded-full flex items-center justify-center mx-auto mb-6 border border-yellow-500/30">
+                    <i data-lucide="zap" class="w-10 h-10 text-yellow-500"></i>
+                </div>
+                <h2 class="text-2xl font-bold mb-3">B 车 3 点标定向导</h2>
+                <p class="text-slate-400 mb-10 text-sm">此过程将消除 B 车与 A 车之间的物理误差。请按照指示行驶。</p>
+                
+                <div class="relative mb-12">
+                    <div class="absolute top-1/2 left-0 w-full h-0.5 bg-slate-700 -translate-y-1/2"></div>
+                    <div class="flex justify-between relative z-10">
+                        <div class="flex flex-col items-center">
+                            <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center font-bold text-sm shadow-[0_0_15px_#2563eb]">1</div>
+                            <span class="text-[10px] mt-2 text-blue-400 font-bold uppercase">Bay 10</span>
+                        </div>
+                        <div class="flex flex-col items-center">
+                            <div class="w-10 h-10 bg-slate-700 rounded-full flex items-center justify-center font-bold text-sm">2</div>
+                            <span class="text-[10px] mt-2 text-slate-500 font-bold uppercase">Bay 50</span>
+                        </div>
+                        <div class="flex flex-col items-center">
+                            <div class="w-10 h-10 bg-slate-700 rounded-full flex items-center justify-center font-bold text-sm">3</div>
+                            <span class="text-[10px] mt-2 text-slate-500 font-bold uppercase">Bay 90</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-6 bg-slate-900 rounded-xl border-2 border-dashed border-slate-700 mb-8 transition-colors hover:border-blue-500/30">
+                    <div class="flex items-center justify-center space-x-4">
+                        <div class="text-left">
+                            <span class="text-[10px] text-slate-500 block uppercase">距离标定点 1</span>
+                            <span class="text-2xl font-mono text-blue-500">0.84 m</span>
+                        </div>
+                        <div class="h-10 w-[1px] bg-slate-700"></div>
+                        <div class="text-left">
+                            <span class="text-[10px] text-slate-500 block uppercase">解算精度</span>
+                            <span class="text-lg font-bold text-green-500">±1.2cm</span>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="w-full py-4 bg-slate-700 text-slate-500 rounded-xl font-bold cursor-not-allowed">等待车辆停稳并在 0.5m 范围内</button>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        // 初始化图标
+        lucide.createIcons();
+
+        // 切换 Tab 逻辑
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.getElementById(tabId).classList.add('active');
+
+            // 更新按钮样式
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('bg-slate-700', 'text-blue-400', 'font-bold');
+            });
+            event.currentTarget.classList.add('bg-slate-700', 'text-blue-400', 'font-bold');
+        }
+
+        // 记录打点
+        function recordPoint() {
+            const bayId = document.getElementById('bay-id').value;
+            const body = document.getElementById('map-table-body');
+            
+            // 模拟采样动画
+            const btn = event.currentTarget;
+            const originalContent = btn.innerHTML;
+            btn.innerHTML = `<i data-lucide="loader-2" class="animate-spin mr-2"></i> 正在进行 5s 均值采样...`;
+            btn.disabled = true;
+            lucide.createIcons();
+
+            setTimeout(() => {
+                const newRow = document.createElement('tr');
+                newRow.className = "border-b border-slate-700/50 bg-blue-900/10 animate-pulse";
+                newRow.innerHTML = `
+                    <td class="p-4 font-mono font-bold">${bayId}</td>
+                    <td class="p-4 font-mono text-slate-300">31.1241021, 121.4563342</td>
+                    <td class="p-4 text-blue-400">+0.008m</td>
+                    <td class="p-4"><span class="px-2 py-1 bg-blue-900/40 text-blue-400 text-[10px] rounded border border-blue-400/30 font-bold uppercase">NEW STORED</span></td>
+                `;
+                body.prepend(newRow);
+                
+                btn.innerHTML = originalContent;
+                btn.disabled = false;
+                lucide.createIcons();
+                showToast(`已在本车存储贝位：${bayId}`);
+            }, 1500); // 模拟
+        }
+
+        function showToast(msg) {
+            const toast = document.createElement('div');
+            toast.className = "fixed bottom-10 right-10 bg-blue-600 text-white px-6 py-3 rounded-xl shadow-2xl z-[100] border border-blue-400/50 flex items-center";
+            toast.innerHTML = `<i data-lucide="check-circle" class="w-4 h-4 mr-2"></i> ${msg}`;
+            document.body.appendChild(toast);
+            lucide.createIcons();
+            setTimeout(() => toast.remove(), 3000);
+        }
+
+        function saveConfig() {
+            showToast("车辆静态参数已写入本地 config.yaml");
+        }
+
+        function syncToCloud() {
+            showToast("正在建立加密隧道，底图数据上传中...");
+        }
+    </script>
+</body>
+</html>

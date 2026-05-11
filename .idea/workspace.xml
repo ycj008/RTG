@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="c73eaacb-089d-40a9-8b76-5e92339297df" name="更改" comment="">
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/RTG.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/PROJECT_SUMMARY.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/QUICKSTART.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/config/system.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/config/vehicle_params.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/config/yard_config.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/connect.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/fronted/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/fronted/public/icon.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/fronted/start.ps1" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/run.ps1" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/run_controller.ps1" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/bridge/api_client.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/bridge/bridge_node.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/bridge/mqtt_client.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/bridge/plc_client.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/bridge/protocol.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/core/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/core/event_bus.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/driver/driver_node.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/driver/gnss_receiver.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/driver/imu_receiver.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/driver/nmea_parser.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/fusion/ekf.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/fusion/fusion_node.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/fusion/imu_mechanization.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/models/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/models/gnss_data.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/models/imu_data.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/models/positioning.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/solver/attitude.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/solver/calibration.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/solver/coordinate_transform.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/solver/lpoint_solver.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/solver/solver_node.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/solver/yard_manager.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/utils/config_loader.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/utils/database.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/utils/logger.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/test_coordinate_transform.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/test_lpoint_solver.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/test_protocol.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/示例.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tools/build_map.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tools/diagnostic.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tools/rtk_survey.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tools/simulator.py" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CopilotPersistence">
+    <persistenceIdMap>
+      <entry key="_D:/kpl/pycharmproject/RTG" value="3Cy3Saet9sUXxdPzCnHN1rdwNOa" />
+    </persistenceIdMap>
+  </component>
+  <component name="CopilotUserSelectedChatMode">
+    <option name="chatModeId" value="Agent" />
+  </component>
+  <component name="CopilotUserSelectedModel">
+    <selectedModels>
+      <entry key="agent-panel" value="Claude Sonnet 4.5" />
+      <entry key="chat-panel" value="Claude Sonnet 4.5" />
+    </selectedModels>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 8
+}</component>
+  <component name="ProjectId" id="3Cy3Saet9sUXxdPzCnHN1rdwNOa" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/kpl/pycharmproject/RTG/tests&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\kpl\pycharmproject\RTG\tests" />
+      <recent name="D:\kpl\pycharmproject\RTG" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\kpl\pycharmproject\RTG" />
+    </key>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-python-sdk-af26db0dccfe-c546a90a8094-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-242.26775.22" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="应用程序级" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="默认任务">
+      <changelist id="c73eaacb-089d-40a9-8b76-5e92339297df" name="更改" comment="" />
+      <created>1777343983294</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1777343983294</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="github-copilot-workspace">
+    <instructionFileLocations>
+      <option value=".github/instructions" />
+      <option value=".github/instructions" />
+    </instructionFileLocations>
+    <promptFileLocations>
+      <option value=".github/prompts" />
+    </promptFileLocations>
+  </component>
+</project>
